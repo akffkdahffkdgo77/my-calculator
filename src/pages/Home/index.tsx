@@ -1,8 +1,17 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { DigitButton, OperatorButton, Screen } from 'components';
+import { ToastContext } from 'components/Toast';
 
 export default function Home() {
+    const context = useContext(ToastContext);
+
+    if (!context) {
+        throw new Error('should use inside ToastContext');
+    }
+
+    const { handleOpen } = context;
+
     const [currentValue, setCurrentValue] = useState('');
     const [operator, setOperator] = useState('');
     const [result, setResult] = useState('');
@@ -25,6 +34,11 @@ export default function Home() {
     const handleNegativePositive = () => setCurrentValue((prev) => `${parseInt(prev, 10) * -1}`);
 
     const handleOperator = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!currentValue) {
+            handleOpen('완성되지 않은 수식입니다!');
+            return;
+        }
+
         const { value } = e.currentTarget;
         if (value === '=' && operator) {
             setCurrentValue(result);
@@ -40,6 +54,9 @@ export default function Home() {
         const { value } = e.currentTarget;
         if (currentValue.length < 15) {
             setCurrentValue((prev) => `${prev}${value}`);
+        } else {
+            handleOpen('15자리까지 입력할 수 있습니다!');
+            return;
         }
 
         if (currentValue) {

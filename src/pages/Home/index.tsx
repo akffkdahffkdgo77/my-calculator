@@ -7,13 +7,13 @@ export default function Home() {
     const [operator, setOperator] = useState('');
     const [result, setResult] = useState('');
 
-    const onReset = () => {
+    const handleReset = () => {
         setCurrentValue('');
         setOperator('');
         setResult('');
     };
 
-    const onDelete = () => {
+    const handleDelete = () => {
         if (currentValue && currentValue.length > 1) {
             const val = currentValue.slice(0, currentValue.length - 1);
             setCurrentValue(val);
@@ -22,21 +22,21 @@ export default function Home() {
         }
     };
 
-    const onNegativePositive = () => setCurrentValue((prev) => `${parseInt(prev, 10) * -1}`);
+    const handleNegativePositive = () => setCurrentValue((prev) => `${parseInt(prev, 10) * -1}`);
 
-    const onOperatorClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleOperator = (e: React.MouseEvent<HTMLButtonElement>) => {
         const { value } = e.currentTarget;
         if (value === '=' && operator) {
             setCurrentValue(result);
             setOperator('');
             setResult('');
-        } else {
+        } else if (value !== '=' && !operator) {
             setOperator(value);
             setCurrentValue((prev) => `${prev} ${value} `);
         }
     };
 
-    const onNumberClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleNumber = (e: React.MouseEvent<HTMLButtonElement>) => {
         const { value } = e.currentTarget;
         if (currentValue.length < 15) {
             setCurrentValue((prev) => `${prev}${value}`);
@@ -74,27 +74,27 @@ export default function Home() {
             <div className="w-[320px] h-full flex justify-center items-center flex-col rounded-md overflow-hidden shadow-lg">
                 <Screen result={result} currentValue={currentValue} />
                 <div className="p-2.5 w-full h-[325px] grid grid-cols-4 grid-rows-5 gap-px bg-pink-50">
-                    <OperatorButton operator="C" handleOperator={onReset} />
-                    <OperatorButton operator="←" handleOperator={onDelete} />
-                    <OperatorButton operator="%" handleOperator={onOperatorClick} />
-                    <OperatorButton operator="÷" handleOperator={onOperatorClick} />
+                    <OperatorButton operator="C" onClick={handleReset} />
+                    <OperatorButton operator="←" onClick={handleDelete} />
+                    <OperatorButton operator="%" onClick={handleOperator} />
+                    <OperatorButton operator="÷" onClick={handleOperator} />
                     {['7', '8', '9'].map((digit) => (
-                        <DigitButton key={`${digit} button`} digit={digit} handleClick={onNumberClick} />
+                        <DigitButton key={`${digit} button`} digit={digit} onClick={handleNumber} />
                     ))}
-                    <OperatorButton operator="x" handleOperator={onOperatorClick} />
+                    <OperatorButton operator="x" onClick={handleOperator} />
                     {['4', '5', '6'].map((digit) => (
-                        <DigitButton key={`${digit} button`} digit={digit} handleClick={onNumberClick} />
+                        <DigitButton key={`${digit} button`} digit={digit} onClick={handleNumber} />
                     ))}
-                    <OperatorButton operator="-" handleOperator={onOperatorClick} />
+                    <OperatorButton operator="-" onClick={handleOperator} />
                     {['1', '2', '3'].map((digit) => (
-                        <DigitButton key={`${digit} button`} digit={digit} handleClick={onNumberClick} />
+                        <DigitButton key={`${digit} button`} digit={digit} onClick={handleNumber} />
                     ))}
-                    <OperatorButton operator="+" handleOperator={onOperatorClick} />
-                    <OperatorButton operator="±" handleOperator={onNegativePositive} />
+                    <OperatorButton operator="+" onClick={handleOperator} />
+                    <OperatorButton operator="±" onClick={handleNegativePositive} />
                     {['0', '.'].map((digit) => (
-                        <DigitButton key={`${digit} button`} digit={digit} handleClick={onNumberClick} />
+                        <DigitButton key={`${digit} button`} digit={digit} onClick={handleNumber} />
                     ))}
-                    <OperatorButton secondary operator="=" handleOperator={onOperatorClick} />
+                    <OperatorButton secondary operator="=" onClick={handleOperator} />
                 </div>
             </div>
         </div>
